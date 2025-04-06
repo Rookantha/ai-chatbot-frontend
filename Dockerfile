@@ -1,32 +1,35 @@
-# Stage 1: Build the image with the Next.js app
-FROM node:18 AS builder
+# Step 1: Build the Next.js app
+FROM node:18 AS build
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy the package.json and package-lock.json (or yarn.lock) to install dependencies
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the app
+# Copy the entire project to the container
 COPY . .
 
 # Build the Next.js app
 RUN npm run build
 
-# Stage 2: Create a production-ready image
+# Step 2: Setup the production environment
 FROM node:18-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the built app from the builder stage
-COPY --from=builder /app /app
+# Copy the build output and package dependencies from the build stage
+COPY --from=build /app ./
 
-# Expose port for the app
+# Install only production dependencies
+RUN npm install --production
+
+# Expose the port the app will run on
 EXPOSE 3000
 
-# Command to run the Next.js app
+# Start the app
 CMD ["npm", "start"]
