@@ -19,7 +19,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const aiResponse = await sendMessageToAI(newMsg.content); 
+      const aiResponse = await sendMessageToAI(newMsg.content);
       setMessages((prev) => [...prev, { role: "ai", content: aiResponse }]);
     } catch (err) {
       setMessages((prev) => [
@@ -32,31 +32,26 @@ export default function Home() {
   };
 
   return (
-    <main className="max-w-2xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">AI Chatbot</h1>
-      <div className="flex flex-col space-y-4">
-        <div className="flex-1 bg-gray-100 p-4 rounded-lg shadow-lg max-h-[500px] overflow-y-auto">
-          <ChatBox
-            messages={messages}
-            userInput={userInput}
-            onInputChange={setUserInput}
-            onSend={handleSend}
-            loading={loading}
-          />
-        </div>
-        <div className="flex items-center space-x-2 border-t pt-4">
+    <main className="min-h-screen bg-gray-100 py-10 px-4">
+      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 flex flex-col gap-4">
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-4">
+          🤖 AI Chatbot
+        </h1>
+        <ChatBox messages={messages} loading={loading} />
+        <div className="flex items-center gap-2 border-t pt-4">
           <input
             type="text"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Type your message..."
+            className="flex-1 border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={loading}
           />
           <button
             onClick={handleSend}
             disabled={loading || !userInput.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:bg-blue-300"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm disabled:bg-blue-300"
           >
             Send
           </button>
