@@ -21,7 +21,7 @@ export default function Home() {
     try {
       const aiResponse = await sendMessageToAI(newMsg.content);
       setMessages((prev) => [...prev, { role: "ai", content: aiResponse }]);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         { role: "ai", content: "⚠️ Failed to respond" },
